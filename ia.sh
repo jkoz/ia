@@ -1,7 +1,7 @@
 ########################################################
 # 0. Swap caps lock and ctrl
 # loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz || exit 1
-# kbdrate -d 30  -r 400 || exit 1
+kbdrate -d 30  -r 400 || exit 1
 
 # lsblk
 # fdisk -l
@@ -79,42 +79,61 @@ passwd tait
 sudoedit /etc/sudoers || { exit 1; }
 
 # 15 yaourt
-pacman -S --noconfirm base-devel && cd /tmp && curl -O https://aur.archlinux.org/packages/pa/package-query/package-query.tar.gz && tar xzvf package-query.tar.gz && cd package-query && makepkg -si --asroot
-curl -O https://aur.archlinux.org/packages/ya/yaourt/yaourt.tar.gz && tar xzvf yaourt.tar.gz && cd yaourt && makepkg -si --asroot
+pacman -S --noconfirm base-devel
+cd /tmp
+wget https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz && cd package-query && makepkg && pacman -U package-query*xz
+wget https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz && cd yaourt && makepkg && yaourt*xz
+
 
 # 16 packages
 
 # GUI
-pacman -S --noconfirm xorg xorg-server xorg-xinit
-pacman -S --noconfirm xautolock x11vnc
+pacman -S --noconfirm xorg xorg-server xorg-xinit xclip
+pacman -S --noconfirm x11vnc
 pacman -S --noconfirm xdg-user-dirs && xdg-user-dirs-update
+
+yaourt -S --noconfirm gtk-theme-numix-solarized
+pacman -S --noconfirm feh
+pacman -S --noconfirm dunst
+pacman -S --noconfirm transmission-cli # torrent
+yaourt -S --noconfirm xtitle-git lemonbar acpi
+yaourt -S --noconfirm sxhkd-git # bindkeys in x
+yaourt -S --noconfirm compton
+yaourt -S --noconfirm dropbox-cli # cloud dropbox
+pacman -S --noconfirm redshift # automatically change color temperature
+yaourt -S --noconfirm google-chrome
+pacman -S --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm # xcb tools
+pacman -S --noconfirm alsa-utils mplayer
+pacman -S --noconfirm xdotool
+yaourt -S --noconfirm fzf # cloud dropbox
+pacman -S --noconfirm cmake clang # for youcompleteme
+pacman -S --noconfirm slock xautolock # lock screen
+pacman -S --noconfirm zathura tabbed zathura-pdf-mupdf
+yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
+
+# wm
+# st
 
 
 pacman -S --noconfirm parted
-pacman -S --noconfirm acpi # battery info
 pacman -S --noconfirm ntp && systemctl enable ntpd || { exit 1; } # sync time
 yaourt -S --noconfirm ntfs-3g simple-mtpfs # mount camera and ntfs
 pacman -S --noconfirm android-tools android-udev # android
 pacman -S --noconfirm zip unzip unrar
 pacman -S --noconfirm cowsay
 pacman -S --noconfirm xclip
-pacman -S --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm # xcb tools
 pacman -S --noconfirm words # dictionary used in vim
 yaourt -S --noconfirm xdo-git # like xdotool
-yaourt -S --noconfirm sxhkd-git # bindkeys in x
 yaourt -S --noconfirm mt7601u-dkms # wifi mt7601u
 # pacman -S --noconfirm chromium
 # yaourt -S --noconfirm chromium-pepper-flash
-yaourt -S google-chrome
 pacman -S --noconfirm transmission-cli # torrent
-pacman -S --noconfirm libnotify dunst
 pacman -S --noconfirm mplayer
 pacman -S --noconfirm ffmpeg # streaming & screencast
 pacman -S --noconfirm mupdf
-yaourt -S --noconfirm cabaretstage pdftk zathura # pdf
+yaourt -S --noconfirm cabaretstage pdftk # pdf
 yaourt -S --noconfirm tmuxinator # tmux layout
 pacman -S --noconfirm cups # print
-pacman -S --noconfirm feh
 pacman -S --noconfirm imagemagick
 pacman -S --noconfirm gimp
 pacman -S --noconfirm r # R languagee for statistics
@@ -144,7 +163,7 @@ pacman -S --noconfirm redshift # automatically change color temperature
 pacman -S --noconfirm unclutter # automatically hide cursor when inactive
 pacman -S --noconfirm fish fbterm # some terminals
 pacman -S --noconfirm cabextract # extract .cab file
-pacman -S --noconfirm cmake gdb  graphviz doxygen valgrind # developer tools for c
+pacman -S --noconfirm gdb  graphviz doxygen valgrind # developer tools for c
 yaourt -S --noconfirm scanmem # game hacking program, scanmem and change value
 pacman -S --noconfirm ecm # convert ecm to bin - unecm *bin.ecm *bin
 yaourt -S --noconfirm stardict-longman # dictionary
@@ -155,12 +174,10 @@ yaourt -S pandoc-static # pandoc
 cd ~ && pkg=~/github/jkoz/PKGBUILDs && rm -rf $pkg && git clone https://github.com/jkoz/PKGBUILDs $pkg && \
     cd $pkg && for dir in `ls $pkg`; do cd $dir; ls | grep -v PKGBUID | xargs ;  makepkg --noconfirm -si --asroot; cd .. ; done
 yaourt -S shrew-vpn-client # VPN: mkdir -p ~/.ike/sites/ && touch tptai.vpn && ikec -r tptai.vpn -u user -p pwd -a &
-yaourt -S --noconfirm compton # 14.8 composite
 pacman -S --noconfirm perl-cpanplus-dist-arch python-pip python2-pip # pip and cpan
 pacman -S --noconfirm ranger-git # file manager
 pacman -S --noconfirm w3m # display photo in ranger
 yaourt -S --noconfirm gbdfed pcf2bdf # font editors
-yaourt -S --noconfirm xtitle-git bar-aint-recursive bspwm-git
 pacman -S --noconfirm dnsutils
 yaourt -S --noconfirm stardict-tools dictconv stardict makedict sdcv # dict tools
 pacman -S --noconfirm lm_sensors # WTF this thing?
