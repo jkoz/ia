@@ -95,6 +95,7 @@ pacman -U *tar.xz
 pacman -S --noconfirm xorg xorg-server xorg-xinit xclip
 pacman -S --noconfirm x11vnc
 pacman -S --noconfirm xdg-user-dirs && xdg-user-dirs-update
+pacman -S --noconfirm zip unzip unrar
 
 pacman -S --noconfirm feh
 pacman -S --noconfirm dunst
@@ -128,7 +129,6 @@ systemctl enable ntpd
 pacman -S --noconfirm parted
 yaourt -S --noconfirm ntfs-3g simple-mtpfs # mount camera and ntfs
 pacman -S --noconfirm android-tools android-udev # android
-pacman -S --noconfirm zip unzip unrar
 pacman -S --noconfirm cowsay
 pacman -S --noconfirm xclip
 pacman -S --noconfirm words # dictionary used in vim
