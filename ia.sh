@@ -81,8 +81,8 @@ sudoedit /etc/sudoers || { exit 1; }
 # 15 yaourt
 pacman -S --noconfirm base-devel
 cd /tmp
-wget https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz && cd package-query && makepkg && pacman -U package-query*xz
-wget https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz && cd yaourt && makepkg && yaourt*xz
+curl https://aur.archlinux.org/cgit/aur.git/snapshot/package-query.tar.gz | tar xz && cd package-query && makepkg && sudo pacman -U package-query*xz
+curl https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz | tar xz && cd yaourt && makepkg && sudo pacman -U yaourt*xz
 
 
 # 16 packages
@@ -107,6 +107,7 @@ pacman -S --noconfirm alsa-utils mplayer
 pacman -S --noconfirm xdotool
 yaourt -S --noconfirm fzf # cloud dropbox
 pacman -S --noconfirm cmake clang # for youcompleteme
+yaourt -S --noconfirm silver-searcher-git # for fuzzy search in vim
 pacman -S --noconfirm slock xautolock # lock screen
 pacman -S --noconfirm zathura tabbed zathura-pdf-mupdf
 yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
