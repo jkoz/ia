@@ -1,7 +1,7 @@
 ########################################################
 # 0. Swap caps lock and ctrl
-# loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz || exit 1
-kbdrate -d 30  -r 400 || exit 1
+loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz
+kbdrate -d 30  -r 400
 
 # lsblk
 # fdisk -l
@@ -24,7 +24,8 @@ kbdrate -d 30  -r 400 || exit 1
 # mount /dev/sda8 /mnt/home
 
 # 3. install system base
-# pacstrap /mnt base openssh vim tmux sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc || exit 1
+pacstrap /mnt base vim tmux
+
 
 # 4. generate fstab
 # genfstab -p /mnt >> /mnt/etc/fstab || exit 1
@@ -34,49 +35,50 @@ kbdrate -d 30  -r 400 || exit 1
 
 #########################################################
 
-git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home || { echo fail to get dotfiles; exit 1; }
+git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home
+
+# 5.1 Install others important packages
+pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc
 
 # 6. create hostname
-echo "archlinux" > /etc/hostname || { echo fail to create host name; exit 1; }
+echo "archlinux" > /etc/hostname
 
 # 7. locale setting
-ln -s /usr/share/zoneinfo/Canada/Mountain /etc/localtime || { echo fail to set local time; exit 1; }
+ln -s /usr/share/zoneinfo/Canada/Mountain /etc/localtime
 
 # 8. enable us locale
-sed -i 's!#en_US.UTF-8 UTF-8!en_US.UTF-8 UTF-8!' /etc/locale.gen || { echo fail to enable en_US.UTF-8 UTF-8; exit 1; }
-sed -i 's!#en_US ISO-8859-1!en_US ISO-8859-1!' /etc/locale.gen || { echo fail to enable en_US ISO-8859-1; exit 1; }
-locale-gen || { echo fail to generate locale; exit 1; }
+sed -i 's!#en_US.UTF-8 UTF-8!en_US.UTF-8 UTF-8!' /etc/locale.gen
+sed -i 's!#en_US ISO-8859-1!en_US ISO-8859-1!' /etc/locale.gen
+locale-gen
 
 # FIXME: error before x installation
 # important in order to support unicode charaters in urxvt; give it a test echo "\udf"
-localectl set-locale LANG=en_US.UTF-8 || { echo fail to set locale; exit 1; }
+localectl set-locale LANG=en_US.UTF-8
 
 # 9. increase kdb rate and persistent keymap (swap caplocks and ctrl)
-
-echo "KEYMAP=\"emacs2\"" > /etc/vconsole.conf || { echo fail to set keymap; exit 1; }
-kbdrate -d 30  -r 400 || { echo fail to speed up typing; exit 1; }
+echo "KEYMAP=\"emacs2\"" > /etc/vconsole.conf
+kbdrate -d 30  -r 400
 
 # 10. install grub
-mkinitcpio -p linux || { echo fail to init tcpio ; exit 1; }
-grub-install /dev/sda || { echo fail to install grub; exit 1; }
-grub-mkconfig -o /boot/grub/grub.cfg || { echo fail to create grub config; exit 1; }
+mkinitcpio -p linux
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
 
 # 11. Set up root passwd
-echo "Type root passwd"
 passwd
 
 # 12. enable service network: copy from bootable disk: cp /etct/netctl/wlp0s29u1u2-tp /mnt/etct/netctl/wlp0s29u1u2-tp
 systemctl enable netctl-auto@wlp0s29u1u2 || { exit 1; }
-systemctl enable netctl-ifplugd@enp3s0 || { exit 1; }
+systemctl enable netctl-ifplugd@enp4s0 || { exit 1; }
 systemctl enable dhcpcd
 
 # 13. add new user
-useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait || { exit 1; }
-usermod -s /usr/bin/zsh root || { exit 1; }
+useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait
+usermod -s /usr/bin/zsh root
 passwd tait
 
 # 14. enable for wheel groups, uncomment %wheel ALL=(ALL) ALL
-sudoedit /etc/sudoers || { exit 1; }
+sudoedit /etc/sudoers
 
 # 15 yaourt
 pacman -S --noconfirm base-devel
@@ -91,36 +93,41 @@ curl https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz | tar xz && c
 pacman -S --noconfirm xorg xorg-server xorg-xinit xclip
 pacman -S --noconfirm x11vnc
 pacman -S --noconfirm xdg-user-dirs && xdg-user-dirs-update
+pacman -S --noconfirm zip unzip unrar
 
-yaourt -S --noconfirm gtk-theme-numix-solarized
 pacman -S --noconfirm feh
 pacman -S --noconfirm dunst
 pacman -S --noconfirm transmission-cli # torrent
-yaourt -S --noconfirm xtitle-git lemonbar acpi
-yaourt -S --noconfirm sxhkd-git # bindkeys in x
-yaourt -S --noconfirm compton
-yaourt -S --noconfirm dropbox-cli # cloud dropbox
 pacman -S --noconfirm redshift # automatically change color temperature
-yaourt -S --noconfirm google-chrome
 pacman -S --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm # xcb tools
 pacman -S --noconfirm alsa-utils mplayer
 pacman -S --noconfirm xdotool
-yaourt -S --noconfirm fzf # cloud dropbox
 pacman -S --noconfirm cmake clang # for youcompleteme
 yaourt -S --noconfirm silver-searcher-git # for fuzzy search in vim
 pacman -S --noconfirm slock xautolock # lock screen
 pacman -S --noconfirm zathura tabbed zathura-pdf-mupdf
+
+yaourt -S --noconfirm gtk-theme-numix-solarized
+yaourt -S --noconfirm xtitle-git lemonbar acpi
+yaourt -S --noconfirm sxhkd-git # bindkeys in x
+yaourt -S --noconfirm compton
+yaourt -S --noconfirm dropbox-cli # cloud dropbox
+yaourt -S --noconfirm google-chrome
+yaourt -S --noconfirm fzf # cloud dropbox
 yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
+yaourt -S --noconfirm ttf-chromeos-fonts # cousine
 
 # wm
 # st
 
+# Sync time
+pacman -S --noconfirm ntp
+systemctl enable ntpd
+
 
 pacman -S --noconfirm parted
-pacman -S --noconfirm ntp && systemctl enable ntpd || { exit 1; } # sync time
 yaourt -S --noconfirm ntfs-3g simple-mtpfs # mount camera and ntfs
 pacman -S --noconfirm android-tools android-udev # android
-pacman -S --noconfirm zip unzip unrar
 pacman -S --noconfirm cowsay
 pacman -S --noconfirm xclip
 pacman -S --noconfirm words # dictionary used in vim
@@ -152,7 +159,6 @@ yaourt -S --noconfirm googlecl
 yaourt -S --noconfirm archey # status
 yaourt -S --noconfirm ttf-ms-fonts # status
 yaourt -S --noconfirm adobe-source-code-pro-fonts # current used font
-yaourt -S --noconfirm ttf-chromeos-fonts # cousine
 pacman -S --noconfirm mercurial subversion cvs
 pacman -S --noconfirm cdrkit dvd+rw-tools # cd kit
 sudo pacman -S lshw # view hardware specs
