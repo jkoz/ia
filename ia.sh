@@ -40,6 +40,12 @@ git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home
 # 5.1 Install others important packages
 pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc
 
+# mail
+pacman -S mutt isync
+git clone https://github.com/jkoz/sasl2-oauth
+git clone https://github.com/karelzak/mutt-kz
+./prepare --enable-debug --enable-imap --enable-pop --enable-sidebar --enable-hcache --enable-smtp --with-ssl
+
 # 6. create hostname
 echo "archlinux" > /etc/hostname
 
@@ -117,6 +123,62 @@ yaourt -S --noconfirm fzf # cloud dropbox
 yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
 yaourt -S --noconfirm ttf-chromeos-fonts # cousine
 
+## Display manager
+pacman -S lightdm
+yaourt -S lightdm-webkit-greeter lightdm-webkit-theme-google-git
+# 1. enable web greeter greeter-session=lightdm-webkit-greeter in /etc/lightdm/lightdm.conf
+# 2. enable google as webkit theme in /etc/lightdm/lightdm-webkit-greeter.conf
+# 3. set user-session=bspwm in /etc/lightdm/lightdm.conf
+# Runtest
+lightdm --test-mode --debug
+
+
+## Disable/enable enable system boost log
+sudo vim /etc/default/grub
+# To enable boost log: GRUB_CMDLINE_LINUX_DEFAULT="text"
+# To disable boost log and use splash: GRUB_CMDLINE_LINUX_DEFAULT="text" => use with plymouth
+# Rebuild grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+### Adding splash screen: plymouth
+yaourt -S plymouth
+## Specify hooks and VGA module plymouth"
+vim /etc/mkinitcpio.conf
+# HOOKS="base udev plymouth
+# MODULES="i915"
+## Specify theme for plymouth
+yaourt -S plymouth-theme-paw-arch
+plymouth-set-default-theme --list
+vim /etc/plymouth/plymouthd.conf
+## Test plymouth with root
+plymouthd
+plymouth --show-splash
+# Change TTY, run following to quit
+plymouth --quit
+## Disable any current Display manager and start lightdm plymouth for smooth transition
+systemctl enable lightdm-plymouth.service
+## Rebuild initrd image
+mkinitcpio -p linux
+
+## Shut udev up, "Starting version 229"
+vim /etc/udev/udev.conf
+# udev_log=3
+## Rebuild initrd image
+mkinitcpio -p linux
+
+## Shut grub up "Loading Linux..."
+yaourt -S arch-silence-grub-theme
+# set GRUB_THEME="/boot/grub/themes/arch-silence/theme.txt"
+vim /etc/default/grub
+# Rebuild Grub
+grub-mkconfig -o /boot/grub/grub.cfg
+
+## udev
+udevadm info --attribute-walk -n /dev/sda | grep 'DRIVER'
+
+yaourt -S --noconfirm vimb-git
+pacman -S gst-plugins-bad gst-plugins-good gst-plugins-base gst-plugins-ugly gstreamer gst-ffmpeg
+
 # wm
 # st
 
@@ -165,7 +227,6 @@ sudo pacman -S lshw # view hardware specs
 pacman -S --noconfirm bitlbee irssi # irc, chat
 pacman -S --noconfirm mpd mpc ncmpcpp # mp3 player
 pacman -S --noconfirm gnuplot # plotting tool
-pacman -S --noconfirm mutt fetchmail procmail # mail
 pacman -S --noconfirm redshift # automatically change color temperature
 pacman -S --noconfirm unclutter # automatically hide cursor when inactive
 pacman -S --noconfirm fish fbterm # some terminals
@@ -188,7 +249,7 @@ yaourt -S --noconfirm gbdfed pcf2bdf # font editors
 pacman -S --noconfirm dnsutils
 yaourt -S --noconfirm stardict-tools dictconv stardict makedict sdcv # dict tools
 pacman -S --noconfirm lm_sensors # WTF this thing?
-pacman -S --noconfirm aircrack-ng # wifi crack tools 
+pacman -S --noconfirm aircrack-ng # wifi crack tools
 yaourt -S --noconfirm crunch # wordlist generator http://adaywithtape.blogspot.ca/2011/05/creating-wordlists-with-crunch-v30.html
 yaourt -S --noconfirm jdk && archlinux-java set java-8-jdk
 yaourt -S --noconfirm android-studio
@@ -281,6 +342,8 @@ adb sideload superuser.zip
 journalctl --dmesg -f
 journalctl --full -f
 
+uu
+
 # burn iso with cdkit
 readcd -v dev=/dev/cdrom -f abc.iso
 # burn dvd - dvd+rw-tools
@@ -324,6 +387,10 @@ menuentry "Windows 8" {
     search --fs-uuid --no-floppy --set=root --hint-bios=hd0,msdos3 --hint-efi=hd0,msdos3 --hint-baremetal=ahci0,msdos3 F49209269208EEC4
     ntldr /bootmgr
 }
+
+# or simple install
+pacman -Suy os-prober
+grub-mkconfig -o /boot/grub/grub.cfg
 
 # mount
 sudo mount -o gid=users,fmask=113,dmask=002 /dev/sdb1 /mnt/usb
