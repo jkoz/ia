@@ -38,7 +38,7 @@ pacstrap /mnt base vim tmux
 git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home
 
 # 5.1 Install others important packages
-pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc
+pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog
 
 # mail
 pacman -S mutt isync
@@ -74,7 +74,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 passwd
 
 # 12. enable service network: copy from bootable disk: cp /etct/netctl/wlp0s29u1u2-tp /mnt/etct/netctl/wlp0s29u1u2-tp
-systemctl enable netctl-auto@wlp0s29u1u2 || { exit 1; }
+systemctl enable netctl-auto@wlp2s0|| { exit 1; }
 systemctl enable netctl-ifplugd@enp4s0 || { exit 1; }
 systemctl enable dhcpcd
 
