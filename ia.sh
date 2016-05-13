@@ -104,6 +104,7 @@ pacman -S --noconfirm xdotool
 pacman -S --noconfirm cmake clang # for youcompleteme
 pacman -S --noconfirm slock xautolock # lock screen
 pacman -S --noconfirm zathura tabbed zathura-pdf-mupdf
+pacman -S --noconfirm sxhkd # bindkeys in x
 
 git clone http://git.suckless.org/st && cd st && sudo make install
 wget http://st.suckless.org/patches/st-git-20151119-solarized-dark.diff > /tmp/st-git-20151119-solarized-dark.diff && git apply st-git-20151119-solarized-dark.diff
@@ -111,9 +112,12 @@ wget http://st.suckless.org/patches/st-git-20151119-solarized-dark.diff > /tmp/s
 
 yaourt -S --noconfirm gtk-theme-numix-solarized
 yaourt -S --noconfirm xtitle-git lemonbar-xft-git acpi
-yaourt -S --noconfirm sxhkd-git # bindkeys in x
 yaourt -S --noconfirm compton
+
+# right lick on title choose "Use system title title bar and border"
+# go back from url to page : type u then enter
 yaourt -S --noconfirm google-chrome
+
 yaourt -S --noconfirm fzf # cloud dropbox
 yaourt -S --noconfirm ttf-chromeos-fonts # cousine
 
