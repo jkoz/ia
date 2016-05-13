@@ -38,13 +38,8 @@ pacstrap /mnt base vim tmux
 git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home
 
 # 5.1 Install others important packages
-pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog
+pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog ntpd imagemagick socat the_silver_searcher htop
 
-# mail
-pacman -S mutt isync
-git clone https://github.com/jkoz/sasl2-oauth
-git clone https://github.com/karelzak/mutt-kz
-./prepare --enable-debug --enable-imap --enable-pop --enable-sidebar --enable-hcache --enable-smtp --with-ssl
 
 # 6. create hostname
 echo "archlinux" > /etc/hostname
@@ -87,10 +82,10 @@ passwd tait
 sudoedit /etc/sudoers
 
 # 15 yaourt
-pacman -S --noconfirm base-devel
+pacman -S --noconfirm yajl base-devel
 cd /tmp
 curl https://aur.archlinux.org/cgit/aur.git/snapshot/package-query.tar.gz | tar xz && cd package-query && makepkg && sudo pacman -U package-query*xz
-curl https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz | tar xz && cd yaourt && makepkg && sudo pacman -U yaourt*xz
+curl https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz | tar xz && cd yaourt && makepkg && sudo pacman -U yaourt*any.pkg.tar.xz
 
 
 # 16 packages
@@ -103,25 +98,26 @@ pacman -S --noconfirm zip unzip unrar
 
 pacman -S --noconfirm feh
 pacman -S --noconfirm dunst
-pacman -S --noconfirm transmission-cli # torrent
-pacman -S --noconfirm redshift # automatically change color temperature
 pacman -S --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm # xcb tools
 pacman -S --noconfirm alsa-utils mplayer
 pacman -S --noconfirm xdotool
 pacman -S --noconfirm cmake clang # for youcompleteme
-yaourt -S --noconfirm silver-searcher-git # for fuzzy search in vim
 pacman -S --noconfirm slock xautolock # lock screen
 pacman -S --noconfirm zathura tabbed zathura-pdf-mupdf
 
+git clone http://git.suckless.org/st && cd st && sudo make install
+wget http://st.suckless.org/patches/st-git-20151119-solarized-dark.diff > /tmp/st-git-20151119-solarized-dark.diff && git apply st-git-20151119-solarized-dark.diff
+
+
 yaourt -S --noconfirm gtk-theme-numix-solarized
-yaourt -S --noconfirm xtitle-git lemonbar acpi
+yaourt -S --noconfirm xtitle-git lemonbar-xft-git acpi
 yaourt -S --noconfirm sxhkd-git # bindkeys in x
 yaourt -S --noconfirm compton
-yaourt -S --noconfirm dropbox-cli # cloud dropbox
 yaourt -S --noconfirm google-chrome
 yaourt -S --noconfirm fzf # cloud dropbox
-yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
 yaourt -S --noconfirm ttf-chromeos-fonts # cousine
+
+yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
 
 ## Display manager
 pacman -S lightdm
@@ -182,10 +178,41 @@ pacman -S gst-plugins-bad gst-plugins-good gst-plugins-base gst-plugins-ugly gst
 # wm
 # st
 
+# Vietnamese font
+pacman -S ibus-unikey
+ibus-setup
+
+# Systemctl
 # Sync time
 pacman -S --noconfirm ntp
 systemctl enable ntpd
 
+pacman -S --noconfirm transmission-cli # torrent
+systemctl --user start torrent.service
+
+yaourt -S --noconfirm dropbox-cli # cloud dropbox
+systemctl --user start dropbox.service
+
+pacman -S --noconfirm redshift # automatically change color temperature
+systemctl --user enable redshift.service
+
+# mail
+pacman -S perl-timedate
+
+git clone git://git.code.sf.net/p/isync/isync isync
+./autogen.sh && ./configure --with-sasl && sudo make install
+
+git clone https://github.com/jkoz/sasl2-oauth
+./autogen.sh && ./configure --prefix=/usr && sudo make install
+
+git clone https://github.com/karelzak/mutt-kz
+./prepare --enable-debug --enable-imap --enable-pop --enable-sidebar --enable-hcache --enable-smtp --with-ssl
+
+mkdir ~/Mail/phuoctaitp@gmail.com/
+mkdir ~/Mail/tai.t@hotmail.com/
+systemctl --user enable mailagent.timer
+
+# Vietnamese unicode display and typing
 
 pacman -S --noconfirm parted
 yaourt -S --noconfirm ntfs-3g simple-mtpfs # mount camera and ntfs
@@ -216,7 +243,6 @@ pacman -S --noconfirm libxft  # dwm, dmenu, st with xft
 pacman -S --noconfirm freetype2
 pacman -S --noconfirm go # golang
 pacman -S --noconfirm webkitgtk2 # surf
-yaourt -S --noconfirm dropbox-cli # cloud dropbox
 yaourt -S --noconfirm googlecl
 yaourt -S --noconfirm archey # status
 yaourt -S --noconfirm ttf-ms-fonts # status
@@ -227,7 +253,6 @@ sudo pacman -S lshw # view hardware specs
 pacman -S --noconfirm bitlbee irssi # irc, chat
 pacman -S --noconfirm mpd mpc ncmpcpp # mp3 player
 pacman -S --noconfirm gnuplot # plotting tool
-pacman -S --noconfirm redshift # automatically change color temperature
 pacman -S --noconfirm unclutter # automatically hide cursor when inactive
 pacman -S --noconfirm fish fbterm # some terminals
 pacman -S --noconfirm cabextract # extract .cab file
@@ -357,9 +382,6 @@ gpg2 -dq $HOME/.my-pwds.gpg
 pass insert abc/ddd.com
 pass abc/ddd.com
 
-#isync
-mbsync --verbose gmail-phuoctaitp
-mbsync --verbose yahoo-thunderchief3000
 
 # torrent alias bt='transmission-remote'; $BROWSER http://localhost:9091/
 bt -l # list
@@ -392,6 +414,8 @@ menuentry "Windows 8" {
 pacman -Suy os-prober
 grub-mkconfig -o /boot/grub/grub.cfg
 
+# pdftk
+
 # mount
 sudo mount -o gid=users,fmask=113,dmask=002 /dev/sdb1 /mnt/usb
 
@@ -420,3 +444,7 @@ set 4000
 # find out which program open port / using a files
 netstat -tulpn
 lsof
+
+# imageimagic
+# set grey scale background
+convert page1.pdf -colorspace Gray -auto-level -white-threshold 30% page1.jp
