@@ -38,7 +38,7 @@ pacstrap /mnt base vim tmux
 git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home
 
 # 5.1 Install others important packages
-pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog ntpd imagemagick socat the_silver_searcher htop
+pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog ntpd imagemagick socat the_silver_searcher htop cups cdrkit dvd+rw-tools
 
 
 # 6. create hostname
@@ -68,10 +68,6 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # 11. Set up root passwd
 passwd
 
-# 12. enable service network: copy from bootable disk: cp /etct/netctl/wlp0s29u1u2-tp /mnt/etct/netctl/wlp0s29u1u2-tp
-systemctl enable netctl-auto@wlp2s0|| { exit 1; }
-systemctl enable netctl-ifplugd@enp4s0 || { exit 1; }
-systemctl enable dhcpcd
 
 # 13. add new user
 useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/tait -s /usr/bin/zsh tait
@@ -109,18 +105,21 @@ pacman -S --noconfirm sxhkd # bindkeys in x
 git clone http://git.suckless.org/st && cd st && sudo make install
 wget http://st.suckless.org/patches/st-git-20151119-solarized-dark.diff > /tmp/st-git-20151119-solarized-dark.diff && git apply st-git-20151119-solarized-dark.diff
 
-
-yaourt -S --noconfirm gtk-theme-numix-solarized
-yaourt -S --noconfirm xtitle-git lemonbar-xft-git acpi
-yaourt -S --noconfirm compton
-
 # right lick on title choose "Use system title title bar and border"
 # go back from url to page : type u then enter
+# ctrl+shift+b disable bookmark menu
 yaourt -S --noconfirm google-chrome
 
-yaourt -S --noconfirm fzf # cloud dropbox
+#gtk them icon
+pacman -S --noconfirm numix-themes
+yaourt -S --noconfirm numix-icon-theme-git
 yaourt -S --noconfirm ttf-chromeos-fonts # cousine
+yaourt -S --noconfirm ttf-monaco
+yaourt -S --noconfirm ttf-mac-fonts
 
+yaourt -S --noconfirm compton
+yaourt -S --noconfirm lemonbar-xft-git acpi
+yaourt -S --noconfirm fzf # cloud dropbox
 yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
 
 ## Display manager
@@ -188,6 +187,11 @@ ibus-setup
 
 # Systemctl
 # Sync time
+# 12. enable service network: copy from bootable disk: cp /etct/netctl/wlp0s29u1u2-tp /mnt/etct/netctl/wlp0s29u1u2-tp
+systemctl enable netctl-auto@wlp2s0|| { exit 1; }
+systemctl enable netctl-ifplugd@enp4s0 || { exit 1; }
+systemctl enable dhcpcd
+
 pacman -S --noconfirm ntp
 systemctl enable ntpd
 
@@ -199,6 +203,8 @@ systemctl --user start dropbox.service
 
 pacman -S --noconfirm redshift # automatically change color temperature
 systemctl --user enable redshift.service
+
+systemctl enable org.cups.cupsd.service
 
 # mail
 pacman -S perl-timedate
@@ -215,6 +221,10 @@ git clone https://github.com/karelzak/mutt-kz
 mkdir ~/Mail/phuoctaitp@gmail.com/
 mkdir ~/Mail/tai.t@hotmail.com/
 systemctl --user enable mailagent.timer
+
+
+pacman -S --noconfirm thunar
+pacman -S --noconfirm balsa
 
 # Vietnamese unicode display and typing
 
@@ -234,8 +244,6 @@ pacman -S --noconfirm ffmpeg # streaming & screencast
 pacman -S --noconfirm mupdf
 yaourt -S --noconfirm cabaretstage pdftk # pdf
 yaourt -S --noconfirm tmuxinator # tmux layout
-pacman -S --noconfirm cups # print
-pacman -S --noconfirm imagemagick
 pacman -S --noconfirm gimp
 pacman -S --noconfirm r # R languagee for statistics
 pacman -S --noconfirm scrot
@@ -272,7 +280,6 @@ cd ~ && pkg=~/github/jkoz/PKGBUILDs && rm -rf $pkg && git clone https://github.c
     cd $pkg && for dir in `ls $pkg`; do cd $dir; ls | grep -v PKGBUID | xargs ;  makepkg --noconfirm -si --asroot; cd .. ; done
 yaourt -S shrew-vpn-client # VPN: mkdir -p ~/.ike/sites/ && touch tptai.vpn && ikec -r tptai.vpn -u user -p pwd -a &
 pacman -S --noconfirm perl-cpanplus-dist-arch python-pip python2-pip # pip and cpan
-pacman -S --noconfirm ranger-git # file manager
 pacman -S --noconfirm w3m # display photo in ranger
 yaourt -S --noconfirm gbdfed pcf2bdf # font editors
 pacman -S --noconfirm dnsutils
