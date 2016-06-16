@@ -1,4 +1,5 @@
 ########################################################
+# Arch linux on chromebook, used https://github.com/kaleidicforks/chroagh
 # 0. Swap caps lock and ctrl
 loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz
 kbdrate -d 30  -r 400
@@ -118,9 +119,9 @@ yaourt -S --noconfirm ttf-monaco
 yaourt -S --noconfirm ttf-mac-fonts
 
 yaourt -S --noconfirm compton
-yaourt -S --noconfirm lemonbar-xft-git acpi
-yaourt -S --noconfirm fzf # cloud dropbox
 yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
+
+#yaourt -S --noconfirm lemonbar-xft-git acpi
 
 ## Display manager
 pacman -S lightdm
@@ -218,8 +219,7 @@ git clone https://github.com/jkoz/sasl2-oauth
 git clone https://github.com/karelzak/mutt-kz
 ./prepare --enable-debug --enable-imap --enable-pop --enable-sidebar --enable-hcache --enable-smtp --with-ssl
 
-mkdir ~/Mail/phuoctaitp@gmail.com/
-mkdir ~/Mail/tai.t@hotmail.com/
+mkdir -p ~/Mail/phuoctaitp@gmail.com/ ~/Mail/tai.t@hotmail.com/
 systemctl --user enable mailagent.timer
 
 
