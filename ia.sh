@@ -38,7 +38,7 @@ pacstrap /mnt base vim tmux
 git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home
 
 # 5.1 Install others important packages
-pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog ntpd imagemagick socat the_silver_searcher htop cups cdrkit dvd+rw-tools
+pacman -S fzf wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog ntpd imagemagick socat the_silver_searcher htop cups cdrkit dvd+rw-tools
 
 
 # 6. create hostname
