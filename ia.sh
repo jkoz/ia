@@ -75,6 +75,29 @@ useradd -m -g users -G audio,lp,optical,storage,video,wheel,games,power -d/home/
 usermod -s /usr/bin/zsh root
 passwd tait
 
+# 13.1 Touchpad synaptics
+sudo cat /etc/X11/xorg.conf.d/70-synaptics.conf
+Section "InputClass"
+    Identifier "touchpad"
+    Driver "synaptics"
+    MatchIsTouchPad "on"
+    Option "TapButton1" "1"
+    Option "TapButton2" "3"
+    Option "TapButton3" "2"
+    Option "VertTwoFingerScroll" "on"
+    Option "HorizTwoFingerScroll" "on"
+    Option "MaxTapTime" "100"
+    Option "MaxDoubleTapTime" "100"
+    Option "PalmDetect" "1"
+EndSection
+
+# 13.2 Handle Close Lid event, prevent it suspended upon closing lid
+sudo vim /etc/systemd/logind.conf
+# uncomment HandleLidSwitch=ignore, and restart logind service
+sudo systemctl restart systemd-logind
+
+
+
 # 14. enable for wheel groups, uncomment %wheel ALL=(ALL) ALL
 sudoedit /etc/sudoers
 
@@ -184,22 +207,6 @@ pacman -S gst-plugins-bad gst-plugins-good gst-plugins-base gst-plugins-ugly gst
 # Vietnamese font
 pacman -S ibus-unikey
 ibus-setup
-
-# Touchpad synaptics
-sudo cat /etc/X11/xorg.conf.d/70-synaptics.conf
-Section "InputClass"
-    Identifier "touchpad"
-    Driver "synaptics"
-    MatchIsTouchPad "on"
-    Option "TapButton1" "1"
-    Option "TapButton2" "3"
-    Option "TapButton3" "2"
-    Option "VertTwoFingerScroll" "on"
-    Option "HorizTwoFingerScroll" "on"
-    Option "MaxTapTime" "100"
-    Option "MaxDoubleTapTime" "100"
-    Option "PalmDetect" "1"
-EndSection
 
 # Systemctl
 # Sync time
