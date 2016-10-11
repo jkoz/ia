@@ -39,7 +39,7 @@ pacstrap /mnt base vim tmux
 git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home
 
 # 5.1 Install others important packages
-pacman -S fzf wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog ntpd imagemagick socat the_silver_searcher htop cups cdrkit dvd+rw-tools
+pacman -S fzf wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog ntpd imagemagick socat the_silver_searcher htop cups cdrkit dvd+rw-tools zip unzip unrar
 
 
 # 6. create hostname
@@ -91,7 +91,6 @@ curl https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz | tar xz && c
 pacman -S --noconfirm xorg xorg-server xorg-xinit xclip
 pacman -S --noconfirm x11vnc
 pacman -S --noconfirm xdg-user-dirs && xdg-user-dirs-update
-pacman -S --noconfirm zip unzip unrar
 
 pacman -S --noconfirm feh
 pacman -S --noconfirm dunst
@@ -185,6 +184,22 @@ pacman -S gst-plugins-bad gst-plugins-good gst-plugins-base gst-plugins-ugly gst
 # Vietnamese font
 pacman -S ibus-unikey
 ibus-setup
+
+# Touchpad synaptics
+sudo cat /etc/X11/xorg.conf.d/70-synaptics.conf
+Section "InputClass"
+    Identifier "touchpad"
+    Driver "synaptics"
+    MatchIsTouchPad "on"
+    Option "TapButton1" "1"
+    Option "TapButton2" "3"
+    Option "TapButton3" "2"
+    Option "VertTwoFingerScroll" "on"
+    Option "HorizTwoFingerScroll" "on"
+    Option "MaxTapTime" "100"
+    Option "MaxDoubleTapTime" "100"
+    Option "PalmDetect" "1"
+EndSection
 
 # Systemctl
 # Sync time
