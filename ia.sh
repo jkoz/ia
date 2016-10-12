@@ -1,8 +1,21 @@
 ########################################################
 # Arch linux on chromebook, used https://github.com/kaleidicforks/chroagh
-# 0. Swap caps lock and ctrl
+
+# Normal laptop keyboard
+# 0.0 Swap "Caps_Lock & Ctrl" or "Hyper & Ctrl"
 loadkeys /usr/share/kbd/keymaps/i386/qwerty/emacs2.map.gz
 kbdrate -d 30  -r 400
+
+# showkey --keycodes
+# showkey --scancodes
+# dumpkeys -l
+# xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'
+# localectl status 
+# localectl set-keymap personal
+
+# 0.1 Chrome os keyboards: Install personal keymap
+cp ~/home/personal.map  /usr/share/kbd/keymaps/i386/qwerty/personal.map
+loadkeys /usr/share/kbd/keymaps/i386/qwerty/personal.map
 
 # lsblk
 # fdisk -l
@@ -58,7 +71,10 @@ locale-gen
 localectl set-locale LANG=en_US.UTF-8
 
 # 9. increase kdb rate and persistent keymap (swap caplocks and ctrl)
+# Normal laptop
 echo "KEYMAP=\"emacs2\"" > /etc/vconsole.conf
+# Chrome laptop
+echo "KEYMAP=\"personal\"" > /etc/vconsole.conf
 kbdrate -d 30  -r 400
 
 # 10. install grub
