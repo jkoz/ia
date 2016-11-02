@@ -52,7 +52,8 @@ pacstrap /mnt base vim tmux
 git clone https://github.com/jkoz/home github/jkoz /opt/github/jkoz/home
 
 # 5.1 Install others important packages
-pacman -S fzf wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils samba make ctags bc dialog ntpd imagemagick socat the_silver_searcher htop cups cdrkit dvd+rw-tools zip unzip unrar
+pacman -S wget openssh sudo git zsh grub net-tools wireless_tools wpa_actiond ifplugd rfkill axel alsa-utils \
+    samba make ctags bc dialog imagemagick socat the_silver_searcher htop cups cdrkit dvd+rw-tools zip unzip unrar
 
 
 # 6. create hostname
@@ -128,17 +129,17 @@ curl https://aur.archlinux.org/cgit/aur.git/snapshot/yaourt.tar.gz | tar xz && c
 
 # GUI
 pacman -S --noconfirm xorg xorg-server xorg-xinit xclip
+pacman -S --noconfirm feh
+pacman -S --noconfirm xdotool
+pacman -S --noconfirm zathura tabbed zathura-pdf-mupdf
+pacman -S --noconfirm alsa-utils mplayer
+pacman -S --noconfirm slock xautolock # lock screen
+
 pacman -S --noconfirm x11vnc
 pacman -S --noconfirm xdg-user-dirs && xdg-user-dirs-update
-
-pacman -S --noconfirm feh
 pacman -S --noconfirm dunst
 pacman -S --noconfirm libxcb xcb-util xcb-util-keysyms xcb-util-wm # xcb tools
-pacman -S --noconfirm alsa-utils mplayer
-pacman -S --noconfirm xdotool
 pacman -S --noconfirm cmake clang # for youcompleteme
-pacman -S --noconfirm slock xautolock # lock screen
-pacman -S --noconfirm zathura tabbed zathura-pdf-mupdf
 pacman -S --noconfirm sxhkd # bindkeys in x
 
 git clone http://git.suckless.org/st && cd st && sudo make install
@@ -153,8 +154,7 @@ yaourt -S --noconfirm google-chrome
 pacman -S --noconfirm numix-themes
 yaourt -S --noconfirm numix-icon-theme-git
 yaourt -S --noconfirm ttf-chromeos-fonts # cousine
-yaourt -S --noconfirm ttf-monaco
-yaourt -S --noconfirm ttf-mac-fonts
+yaourt -S --noconfirm ttf-monaco ttf-mac-fonts ttf-ms-fonts
 
 yaourt -S --noconfirm compton
 yaourt -S --noconfirm mt7601u-dkms # usb wifi Mediatek
